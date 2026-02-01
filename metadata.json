@@ -1,0 +1,8 @@
+
+{
+  "name": "Smart Trolley System",
+  "description": "An academic project simulator for a weight-verified smart shopping cart with barcode scanning, local shopping lists, indoor navigation, and payment simulation.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
