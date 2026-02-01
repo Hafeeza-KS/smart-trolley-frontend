@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
+import { PAYMENT_API_URL } from '../apiUrls';
 import React, { useState } from 'react';
 import { CartItem, ItemStatus, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
@@ -21,7 +22,7 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
 
 
   const handlePayNow = async () => {
-  const res = await fetch(`${API_URL}/create-order`, {
+  const res = await fetch(`${PAYMENT_API_URL}/create-order`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ amount: grandTotal })

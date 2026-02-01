@@ -1,3 +1,4 @@
+import { OCR_API_URL } from "../apiUrls";
 import React, { useState, useRef, useEffect } from "react";
 import { ShoppingListItem, Product, Language } from "../types";
 import { MOCK_PRODUCTS, TRANSLATIONS } from "../constants";
