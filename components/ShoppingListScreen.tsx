@@ -83,37 +83,44 @@ const ShoppingListScreen: React.FC<ShoppingListScreenProps> = ({
     setList((prev) => prev.filter((i) => i.id !== id));
 
   /* ---------------- OCR IMAGE UPLOAD ---------------- */
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+const handleImageUpload = async (
+  event: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
 
-    const formData = new FormData();
-    formData.append("image", file);
+  const formData = new FormData();
+  formData.append("image", file);
 
-    const OCR_API_URL = import.meta.env.VITE_OCR_API_URL as string;
+  const OCR_API_URL = import.meta.env.VITE_OCR_API_URL as string;
 
+  try {
     const response = await fetch(`${OCR_API_URL}/ocr`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     if (!response.ok) {
-      console.error("OCR failed");
+      console.error("OCR request failed");
       return;
     }
 
     const data = await response.json();
 
-    setList(prev => [
+    setList((prev) => [
       ...prev,
       ...data.items.map((item: string) => ({
         id: Date.now().toString() + Math.random(),
         name: item,
         completed: false,
-        productId: undefined
-      }))
+        productId: undefined,
+      })),
     ]);
-  };
+  } catch (err) {
+    console.error("OCR error:", err);
+  }
+};
+
 
   /* ---------------- UI ---------------- */
   return (
