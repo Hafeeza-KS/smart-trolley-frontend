@@ -6,7 +6,6 @@ interface HeaderProps {
   lang: Language;
   setLang: (l: Language) => void;
 }
-
 const LANGUAGES: { code: Language; label: string; native: string }[] = [
   { code: 'en', label: 'English', native: 'English' },
   { code: 'hi', label: 'Hindi', native: 'हिंदी' },
@@ -17,11 +16,9 @@ const LANGUAGES: { code: Language; label: string; native: string }[] = [
   { code: 'ur', label: 'Urdu', native: 'اردو' },
   { code: 'bn', label: 'Bengali', native: 'বাংলা' },
 ];
-
 const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -31,9 +28,7 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
   const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
-
   return (
     <header className="p-5 flex justify-between items-center z-[150] relative">
       <div className="flex items-center gap-3">
@@ -61,7 +56,6 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
             <span className="uppercase">{lang}</span>
             <i className={`fas fa-chevron-down transition-transform duration-300 ${isOpen ? 'rotate-180 text-violet-500' : 'text-slate-400'}`}></i>
           </button>
-
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 glass rounded-2xl shadow-2xl border border-white/60 overflow-hidden animate-scale-in py-2 backdrop-blur-xl bg-white/90 z-[200]">
               <div className="px-4 py-2 border-b border-slate-100 mb-1">
@@ -90,7 +84,6 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
             </div>
           )}
         </div>
-
         <div className="w-10 h-10 rounded-xl overflow-hidden glass border-2 border-white shadow-lg">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" />
         </div>
@@ -98,5 +91,4 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
     </header>
   );
 };
-
 export default Header;

@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
-import { ESP32Message } from '../types';
-import { MOCK_PRODUCTS } from '../constants';
+import { ESP32Message, Product } from '../types';
+
 
 interface SimulationPanelProps {
   onSendMessage: (msg: ESP32Message) => void;
+    products: Product[];
 }
 
-const SimulationPanel: React.FC<SimulationPanelProps> = ({ onSendMessage }) => {
+const SimulationPanel: React.FC<SimulationPanelProps> = ({ onSendMessage, products }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const simulateWeightAdd = (weight: number) => {
@@ -87,7 +88,7 @@ const SimulationPanel: React.FC<SimulationPanelProps> = ({ onSendMessage }) => {
         <div>
           <p className="text-[10px] text-gray-500 uppercase font-bold mb-2">Simulate Barcode Scan</p>
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {MOCK_PRODUCTS.map(p => (
+            {products.map(p => (
               <button 
                 key={p.barcode}
                 onClick={() => simulateBarcodeScan(p.barcode)}
@@ -98,7 +99,6 @@ const SimulationPanel: React.FC<SimulationPanelProps> = ({ onSendMessage }) => {
             ))}
           </div>
         </div>
-
         <div className="bg-black/40 p-2 rounded border border-gray-800">
            <p className="text-[9px] font-mono text-green-400">
              // JSON Exchange Log <br/>
@@ -109,5 +109,4 @@ const SimulationPanel: React.FC<SimulationPanelProps> = ({ onSendMessage }) => {
     </div>
   );
 };
-
 export default SimulationPanel;

@@ -1,23 +1,12 @@
 
 import { Product } from './types';
-
-export const MOCK_PRODUCTS: Product[] = [
-  { barcode: '89012345', name: 'Premium Biscuits', price: 45, weight: 200, category: 'Snacks', location: { x: 62, y: 12, zone: 'A-3' } },
-  { barcode: '89056789', name: 'Fresh Milk 1L', price: 60, weight: 1000, category: 'Dairy', location: { x: 37, y: 62, zone: 'A-10' } },
-  { barcode: '89098765', name: 'Chocolate Bar', price: 20, weight: 50, category: 'Snacks', location: { x: 12, y: 37, zone: 'A-5' } },
-  { barcode: '89011223', name: 'Instant Noodles', price: 12, weight: 70, category: 'Pantry', location: { x: 87, y: 87, zone: 'A-16' } },
-  { barcode: '89033445', name: 'Fruit Juice 1L', price: 95, weight: 1050, category: 'Beverages', location: { x: 12, y: 12, zone: 'A-1' } },
-];
-
 export const WAIT_WINDOW_MS = 5000;
-
 const DEFAULT_OFFERS = [
   { id: 1, title: 'Summer Dairy Sale', desc: 'Flat 10% OFF on all Milk', code: 'DAIRY10', gradient: 'from-blue-500 to-cyan-400', icon: 'fa-cow' },
   { id: 2, title: 'Snack Attack', desc: 'Buy 2 get 1 FREE on Biscuits', code: 'SNACKFREE', gradient: 'from-orange-500 to-amber-400', icon: 'fa-cookie' },
   { id: 3, title: 'Weekend Special', desc: '₹50 cashback above ₹500', code: 'WKD50', gradient: 'from-violet-600 to-fuchsia-500', icon: 'fa-star' },
   { id: 4, title: 'New User Offer', desc: '₹100 discount first scan', code: 'HELLO100', gradient: 'from-emerald-600 to-teal-400', icon: 'fa-gift' },
 ];
-
 const DEFAULT_PRODUCT_NAMES: Record<string, string> = {
   '89012345': 'Premium Biscuits',
   '89056789': 'Fresh Milk 1L',
@@ -26,7 +15,6 @@ const DEFAULT_PRODUCT_NAMES: Record<string, string> = {
   '89033445': 'Fruit Juice 1L',
   'unknown': 'Unscanned Item'
 };
-
 export const TRANSLATIONS = {
   en: {
     cart_title: "SmartTrolley",

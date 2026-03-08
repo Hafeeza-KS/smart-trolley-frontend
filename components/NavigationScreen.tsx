@@ -1,14 +1,16 @@
 
 import React, { useMemo } from 'react';
 import { ShoppingListItem, Product, Language } from '../types';
-import { MOCK_PRODUCTS, TRANSLATIONS } from '../constants';
+//import { supabase } from './supabaseClient';
+import { TRANSLATIONS } from '../constants';
 
 interface NavigationScreenProps {
   shoppingList: ShoppingListItem[];
   lang: Language;
+  products: Product[];
 }
 
-const NavigationScreen: React.FC<NavigationScreenProps> = ({ shoppingList, lang }) => {
+const NavigationScreen: React.FC<NavigationScreenProps> = ({ shoppingList, lang, products }) => {
   const t = (TRANSLATIONS[lang] || TRANSLATIONS.en) as any;
   const trolleyPos = { x: 50, y: 92 }; 
 
@@ -16,7 +18,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({ shoppingList, lang 
   const prioritizedItems = useMemo(() => {
     const pending = shoppingList
       .filter(i => !i.completed)
-      .map(i => MOCK_PRODUCTS.find(p => p.barcode === i.productId || p.name.toLowerCase().includes(i.name.toLowerCase())))
+      .map(i => products.find(p => p.barcode === i.productId || p.name.toLowerCase().includes(i.name.toLowerCase())))
       .filter(p => p !== undefined) as Product[];
 
     return [...pending].sort((a, b) => {
@@ -24,7 +26,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({ shoppingList, lang 
       const distB = Math.abs(b.location.x - trolleyPos.x) + Math.abs(b.location.y - trolleyPos.y);
       return distA - distB;
     });
-  }, [shoppingList]);
+  }, [shoppingList, products]);
 
   const targetItem = prioritizedItems[0] || null;
   const nextTarget = prioritizedItems[1] || null;
