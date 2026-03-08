@@ -19,7 +19,7 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
   const unscanned = items.filter(i => i.status === ItemStatus.UNSCANNED);
 
   const total = items.reduce((acc, i) => acc + (i.price || 0), 0);
-  const gst = total * 0.18;
+  const gst = total * 1;
   const grandTotal = total + gst;
 
   const handlePayNow = async () => {
