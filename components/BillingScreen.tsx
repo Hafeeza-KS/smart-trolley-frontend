@@ -15,7 +15,9 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
   const t = (TRANSLATIONS[lang] || TRANSLATIONS.en) as any;
 
   const [isPaid, setIsPaid] = useState(false);
-
+  const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+  const [txnId, setTxnId] = useState<string | null>(null);
+  
   const unscanned = items.filter(i => i.status === ItemStatus.UNSCANNED);
 
   const total = items.reduce((acc, i) => acc + (i.price || 0), 0);
@@ -50,6 +52,7 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
         handler: async function (response: any) {
 
           console.log("Payment success:", response);
+          setTxnId(response.razorpay_order_id);
 
           try {
 
@@ -65,7 +68,20 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
             });
 
             // generate receipt
-            await fetch(`${API_URL}/generate-receipt?order_id=${response.razorpay_order_id}`);
+           const receiptRes = await fetch(
+            `${API_URL}/generate-receipt?order_id=${response.razorpay_order_id}`
+          );
+
+      const receiptData = await receiptRes.json();
+      if (!receiptData.receipt_url) {
+      console.error("Receipt generation failed");
+      return;
+    }
+
+      setReceiptUrl(receiptData.receipt_url);
+
+      // automatically open receipt
+      window.open(receiptData.receipt_url, "_blank");
 
           } catch (err) {
             console.error("Backend error:", err);
@@ -97,7 +113,14 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
         </div>
 
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{t.pay_success}</h2>
-        <p className="text-gray-500 mb-8">{t.receipt_sent}</p>
+        {receiptUrl && (
+          <button
+            onClick={() => window.open(receiptUrl, "_blank")}
+            className="mb-8 bg-green-600 text-white px-6 py-3 rounded-xl shadow hover:bg-green-700"
+          >
+            📄 View Receipt
+          </button>
+        )}
 
         <div className="bg-gray-50 rounded-2xl p-6 border-2 border-dashed border-gray-200 text-left mb-8 font-mono text-sm">
 
@@ -124,7 +147,7 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
           </div>
 
           <p className="mt-4 text-[10px] text-center text-gray-400">
-            {t.txn_id}: TXN_{Math.floor(Math.random() * 10000000)}
+            {t.txn_id}: {txnId}
           </p>
 
         </div>
@@ -132,6 +155,8 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
         <button
           onClick={() => {
             setIsPaid(false);
+            setReceiptUrl(null);
+            setTxnId(null);
             clearCart();
           }}
           className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-indigo-700 active:scale-95 transition-all"
