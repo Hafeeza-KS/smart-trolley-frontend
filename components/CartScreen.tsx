@@ -23,13 +23,20 @@ const CartScreen: React.FC<CartScreenProps> = ({
   const t = (TRANSLATIONS[lang] || TRANSLATIONS.en) as any;
 
   // Sum of all validated cart item weights from DB
-  const validatedWeight = items.reduce((acc, item) => acc + item.weight, 0);
-  const totalPrice      = items.reduce((acc, item) => acc + (item.price || 0), 0);
+  const validatedWeight = items.reduce(
+    (acc, item) => acc + (item.weight * (item.quantity || 1)),
+    0
+  );
+  const totalPrice = items.reduce(
+    (acc, item) => acc + ((item.price || 0) * (item.quantity || 1)),
+    0
+  );
   const unscannedCount  = items.filter(i => i.status === ItemStatus.UNSCANNED).length;
 
   // ── Live weight display logic ──────────────────────────────────
   // Show real ESP32 reading when available, fall back to DB sum
-  const displayWeight = liveWeight > 0 ? liveWeight : validatedWeight;
+  const displayWeight =
+    liveWeight > validatedWeight ? liveWeight : validatedWeight;
 
   // ── Unaccounted weight ─────────────────────────────────────────
   // Difference between what the scale sees and what's been validated
