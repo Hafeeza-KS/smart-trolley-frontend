@@ -52,21 +52,20 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
         handler: async function (response: any) {
 
           console.log("Payment success:", response);
-          setTxnId(response.razorpay_order_id);
+          setTxnId(response.razorpay_payment_id);
 
           try {
 
             // notify backend payment success
             await fetch(`${API_URL}/payment-success`, {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                order_id: response.razorpay_order_id
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature
               })
             });
-
             // generate receipt
            const receiptRes = await fetch(
             `${API_URL}/generate-receipt?order_id=${response.razorpay_order_id}`
@@ -153,11 +152,11 @@ const BillingScreen: React.FC<BillingScreenProps> = ({ items, clearCart, lang })
         </div>
 
         <button
-          onClick={() => {
+          onClick={async () => {
             setIsPaid(false);
             setReceiptUrl(null);
             setTxnId(null);
-            clearCart();
+            await clearCart();
           }}
           className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-indigo-700 active:scale-95 transition-all"
         >
